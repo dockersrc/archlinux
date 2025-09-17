@@ -1,0 +1,32 @@
+# Multi-architecture Dockerfile for Arch Linux
+# Supports both x86_64 and arm64v8 architectures
+
+ARG TARGETARCH
+ARG TARGETPLATFORM
+
+# Use conditional base image based on target architecture
+FROM --platform=$TARGETPLATFORM archlinux:latest AS base-amd64
+FROM --platform=$TARGETPLATFORM lopsided/archlinux-arm64v8:latest AS base-arm64
+
+# Select the appropriate base image based on TARGETARCH
+FROM base-${TARGETARCH} AS base
+
+# Update system and install essential packages
+RUN pacman -Syyu --noconfirm; \
+  pacman -S --noconfirm git curl wget bash glibc-locales; \
+  pacman -Scc --noconfirm
+
+RUN echo "en_US.UTF-8 UTF-8" >/etc/locale.gen && locale-gen
+
+# Set environment variables
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+# Default command
+CMD ["/bin/bash"]
+
+# Labels for metadata
+LABEL version="1.0"
+LABEL maintainer="CasjaysDev"
+LABEL architecture="amd64,arm64"
+LABEL description="Multi-architecture Arch Linux container"
