@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202509162338-git
+##@Version           :  202509200514-git
 # @@Author           :  CasjaysDev
 # @@Contact          :  CasjaysDev <docker-admin@casjaysdev.pro>
 # @@License          :  MIT
 # @@Copyright        :  Copyright 2025 CasjaysDev
-# @@Created          :  Tue Sep 16 11:38:14 PM EDT 2025
+# @@Created          :  Sat Sep 20 05:14:00 AM EDT 2025
 # @@File             :  03-files.sh
 # @@Description      :  script to run files
 # @@Changelog        :  newScript

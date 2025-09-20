@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202509162338-git
+##@Version           :  202509200514-git
 # @@Author           :  Jason Hempstead
 # @@Contact          :  jason@casjaysdev.pro
 # @@License          :  LICENSE.md
 # @@ReadME           :  entrypoint.sh --help
 # @@Copyright        :  Copyright: (c) 2025 Jason Hempstead, Casjays Developments
-# @@Created          :  Tuesday, Sep 16, 2025 23:38 EDT
+# @@Created          :  Saturday, Sep 20, 2025 05:14 EDT
 # @@File             :  entrypoint.sh
 # @@Description      :  Entrypoint file for archlinux
 # @@Changelog        :  New script
@@ -251,14 +251,6 @@ EOF
 # Create the backup dir
 [ -n "$BACKUP_DIR" ] && { [ -d "$BACKUP_DIR" ] || mkdir -p "$BACKUP_DIR"; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if [ -f "$ENTRYPOINT_PID_FILE" ]; then
-  START_SERVICES="no"
-  touch "$ENTRYPOINT_PID_FILE"
-else
-  echo "$$" >"$ENTRYPOINT_PID_FILE"
-  # Clean any stale PID files on first run
-  rm -f /run/init.d/*.pid 2>/dev/null || true
-fi
 if [ -f "$ENTRYPOINT_INIT_FILE" ]; then
   ENTRYPOINT_MESSAGE="no" ENTRYPOINT_FIRST_RUN="no"
 fi
@@ -370,11 +362,16 @@ if [ "$ENTRYPOINT_FIRST_RUN" != "no" ]; then
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # if no pid assume container restart - clean stale files on restart
-if [ ! -f "$ENTRYPOINT_PID_FILE" ]; then
-  START_SERVICES="yes"
-  # Clean stale pid files from previous container runs
+if [ -f "$ENTRYPOINT_PID_FILE" ]; then
+  START_SERVICES="no"
+  touch "$ENTRYPOINT_PID_FILE"
+else
+  START_SERVICES=yes
+  # Clean any stale PID files on first run
   rm -f /run/__start_init_scripts.pid /run/init.d/*.pid /run/*.pid 2>/dev/null || true
-elif [ ! -f "/run/__start_init_scripts.pid" ]; then
+fi
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if [ ! -f "/run/__start_init_scripts.pid" ]; then
   START_SERVICES="yes"
   touch /run/__start_init_scripts.pid
 fi
