@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202509200514-git
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+##@Version           :  202510221727-git
 # @@Author           :  CasjaysDev
 # @@Contact          :  CasjaysDev <docker-admin@casjaysdev.pro>
 # @@License          :  MIT
 # @@Copyright        :  Copyright 2025 CasjaysDev
-# @@Created          :  Sat Sep 20 05:14:00 AM EDT 2025
+# @@Created          :  Wed Oct 22 05:27:53 PM EDT 2025
 # @@File             :  03-files.sh
 # @@Description      :  script to run files
 # @@Changelog        :  newScript
@@ -16,17 +16,17 @@
 # @@Terminal App     :  yes
 # @@sudo/root        :  yes
 # @@Template         :  templates/dockerfiles/init_scripts/03-files.sh
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # shellcheck disable=SC1001,SC1003,SC2001,SC2003,SC2016,SC2031,SC2120,SC2155,SC2199,SC2317,SC2329
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set bash options
 set -o pipefail
 [ "$DEBUGGER" = "on" ] && echo "Enabling debugging" && set -x$DEBUGGER_OPTIONS
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set env variables
 exitCode=0
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # Predefined actions
 if [ -d "/tmp/bin" ]; then
   mkdir -p "/usr/local/bin"
@@ -80,14 +80,14 @@ if [ -d "/tmp/data" ]; then
   done
 fi
 unset data
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the exit code
 #exitCode=$?
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 exit $exitCode
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -
 # ex: ts=2 sw=2 et filetype=sh
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - -

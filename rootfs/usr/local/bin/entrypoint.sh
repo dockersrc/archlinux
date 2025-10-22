@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202510221522-git
+##@Version           :  202510221727-git
 # @@Author           :  Jason Hempstead
 # @@Contact          :  jason@casjaysdev.pro
 # @@License          :  WTFPL
 # @@ReadME           :  entrypoint.sh --help
 # @@Copyright        :  Copyright: (c) 2025 Jason Hempstead, Casjays Developments
-# @@Created          :  Wednesday, Oct 22, 2025 15:22 EDT
+# @@Created          :  Wednesday, Oct 22, 2025 17:27 EDT
 # @@File             :  entrypoint.sh
-# @@Description      :  Entrypoint file for entrypoint.sh
+# @@Description      :  Entrypoint file for archlinux
 # @@Changelog        :  New script
 # @@TODO             :  Better documentation
 # @@Other            :  
@@ -31,7 +31,7 @@ PATH="/usr/local/etc/docker/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set bash options
 SCRIPT_FILE="$0"
-CONTAINER_NAME="entrypoint.sh"
+CONTAINER_NAME="archlinux"
 SCRIPT_NAME="$(basename -- "$SCRIPT_FILE" 2>/dev/null)"
 CONTAINER_NAME="${ENV_CONTAINER_NAME:-$CONTAINER_NAME}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -84,8 +84,8 @@ SERVICE_UID="${SERVICE_UID:-0}" # set the user id
 SERVICE_GID="${SERVICE_GID:-0}" # set the group id
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # User and group in which the service switches to - IE: nginx,apache,mysql,postgres
-SERVICE_USER="${SERVICE_USER:-entrypoint.sh}"   # execute command as another user
-SERVICE_GROUP="${SERVICE_GROUP:-entrypoint.sh}" # Set the service group
+SERVICE_USER="${SERVICE_USER:-archlinux}"   # execute command as another user
+SERVICE_GROUP="${SERVICE_GROUP:-archlinux}" # Set the service group
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Secondary ports
 SERVER_PORTS="" # specifiy other ports
@@ -258,7 +258,7 @@ fi
 if [ "$ENTRYPOINT_FIRST_RUN" != "no" ]; then
   # Show start message
   if [ "$CONFIG_DIR_INITIALIZED" = "no" ] || [ "$DATA_DIR_INITIALIZED" = "no" ]; then
-    [ "$ENTRYPOINT_MESSAGE" = "yes" ] && echo "Executing entrypoint script for entrypoint.sh"
+    [ "$ENTRYPOINT_MESSAGE" = "yes" ] && echo "Executing entrypoint script for archlinux"
   fi
   # - - - - - - - - - - - - - - - - - - - - - - - - -
   # Set reusable variables
