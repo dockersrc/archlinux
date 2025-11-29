@@ -1,7 +1,7 @@
 # Docker image for archlinux using the archlinux template
 ARG IMAGE_NAME="archlinux"
 ARG PHP_SERVER="archlinux"
-ARG BUILD_DATE="202509171500"
+ARG BUILD_DATE="202511291148"
 ARG LANGUAGE="en_US.UTF-8"
 ARG TIMEZONE="America/New_York"
 ARG WWW_ROOT_DIR="/usr/local/share/httpd/default"
@@ -60,7 +60,7 @@ ARG SHELL_OPTS
 ARG AUR_USER
 ARG AUR_HOME
 
-ARG PACK_LIST="tini bash-completion git curl wget sudo unzip base-devel mailx postfix python python-pip certbot ca-certificates jq "
+ARG PACK_LIST="bash-completion git curl wget sudo unzip base-devel mailx postfix python python-pip certbot ca-certificates jq "
 
 ENV ENV=~/.profile
 ENV SHELL="/bin/sh"
@@ -78,22 +78,21 @@ COPY ./rootfs/usr/local/bin/. /usr/local/bin/
 
 RUN set -e; \
   echo "Updating the system and ensuring bash is installed"; \
-  pacman -Sy --noconfirm bash
+  pkmgr update;pkmgr install bash
 
 RUN set -e; \
   echo "Setting up prerequisites"; \
   pacman -Sy --noconfirm archlinux-keyring; \
   pacman-key --init; \
   pacman-key --populate; \
+  echo "installing bash"; \
+  pacman -Sy --noconfirm bash; \
   SH_CMD="$(which sh 2>/dev/null||command -v sh 2>/dev/null)"; \
   BASH_CMD="$(which bash 2>/dev/null||command -v bash 2>/dev/null)"; \
-  [ -x "$BASH_CMD" ] && /usr/local/bin/symlink "$BASH_CMD" "/bin/sh" || true; \
-  [ -x "$BASH_CMD" ] && /usr/local/bin/symlink "$BASH_CMD" "/usr/bin/sh" || true; \
-  [ -x "$BASH_CMD" ] && [ "$SH_CMD" != "/bin/sh" ] && /usr/local/bin/symlink "$BASH_CMD" "$SH_CMD" || true; \
+  [ -x "$BASH_CMD" ] && symlink "$BASH_CMD" "/bin/sh" || true; \
+  [ -x "$BASH_CMD" ] && symlink "$BASH_CMD" "/usr/bin/sh" || true; \
+  [ -x "$BASH_CMD" ] && [ "$SH_CMD" != "/bin/sh"] && symlink "$BASH_CMD" "$SH_CMD" || true; \
   [ -n "$BASH_CMD" ] && sed -i 's|root:x:.*|root:x:0:0:root:/root:'$BASH_CMD'|g' "/etc/passwd" || true
-
-RUN set -e; \
-  pkmgr clean
 
 ENV SHELL="/bin/bash"
 SHELL [ "/bin/bash", "-c" ]
@@ -149,11 +148,11 @@ RUN echo "Updating system files "; \
   if [ "$PHP_VERSION" != "system" ] && [ -e "/etc/php" ] && [ -d "/etc/${PHP_VERSION}" ];then rm -Rf "/etc/php";fi; \
   if [ "$PHP_VERSION" != "system" ] && [ -n "${PHP_VERSION}" ] && [ -d "/etc/${PHP_VERSION}" ];then ln -sf "/etc/${PHP_VERSION}" "/etc/php";fi; \
   if [ -f "/root/docker/setup/03-files.sh" ];then echo "Running the files script";/root/docker/setup/03-files.sh||{ echo "Failed to execute /root/docker/setup/03-files.sh" >&2 && exit 10; };echo "Done running the files script";fi; \
-  echo ""
+echo ""
 
 RUN echo "Custom Settings"; \
   $SHELL_OPTS; \
-  echo ""
+echo ""
 
 RUN echo "Setting up users and scripts "; \
   $SHELL_OPTS; \
@@ -181,7 +180,7 @@ RUN echo "Setting OS Settings "; \
 
 RUN echo "Custom Applications"; \
   $SHELL_OPTS; \
-  echo ""
+echo ""
 
 RUN echo "Running custom commands"; \
   if [ -f "/root/docker/setup/05-custom.sh" ];then echo "Running the custom script";/root/docker/setup/05-custom.sh||{ echo "Failed to execute /root/docker/setup/05-custom.sh" && exit 10; };echo "Done running the custom script";fi; \
@@ -247,8 +246,8 @@ LABEL org.opencontainers.image.authors="${LICENSE}"
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 LABEL org.opencontainers.image.version="${BUILD_VERSION}"
 LABEL org.opencontainers.image.schema-version="${BUILD_VERSION}"
-LABEL org.opencontainers.image.url="docker.io/casjaysdevdocker/archlinux"
-LABEL org.opencontainers.image.source="docker.io/casjaysdevdocker/archlinux"
+LABEL org.opencontainers.image.url="https://hub.docker.com/casjaysdevdocker/archlinux"
+LABEL org.opencontainers.image.source="https://hub.docker.com/casjaysdevdocker/archlinux"
 LABEL org.opencontainers.image.vcs-type="Git"
 LABEL org.opencontainers.image.revision="${BUILD_VERSION}"
 LABEL org.opencontainers.image.source="https://github.com/casjaysdevdocker/archlinux"
@@ -282,6 +281,5 @@ EXPOSE ${SERVICE_PORT} ${ENV_PORTS}
 
 STOPSIGNAL SIGRTMIN+3
 
-CMD [ "tail", "-f", "/dev/null" ]
 ENTRYPOINT [ "tini", "-p", "SIGTERM","--", "/usr/local/bin/entrypoint.sh" ]
 HEALTHCHECK --start-period=10m --interval=5m --timeout=15s CMD [ "/usr/local/bin/entrypoint.sh", "healthcheck" ]
