@@ -78,6 +78,7 @@ COPY ./dockerfs/usr/local/bin/. /usr/local/bin/
 
 RUN set -e; \
   echo "Updating the system and ensuring bash is installed"; \
+  sed -i 's/^#DisableSandbox/DisableSandbox/' /etc/pacman.conf || sed -i '/\[options\]/a DisableSandbox' /etc/pacman.conf; \
   pkmgr update;pkmgr install bash
 
 RUN set -e; \

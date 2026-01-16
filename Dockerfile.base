@@ -12,7 +12,13 @@ FROM --platform=$TARGETPLATFORM lopsided/archlinux-arm64v8:latest AS base-arm64
 FROM base-${TARGETARCH} AS base
 
 # Update system and install essential packages
-RUN pacman -Syyu --noconfirm; \
+RUN set -e; \
+  if grep -q "^#DisableSandbox" /etc/pacman.conf 2>/dev/null; then \
+    sed -i 's/^#DisableSandbox/DisableSandbox/' /etc/pacman.conf; \
+  else \
+    sed -i '/\[options\]/a DisableSandbox' /etc/pacman.conf; \
+  fi; \
+  pacman -Syyu --noconfirm; \
   pacman -Syyu --noconfirm git curl wget bash glibc-locales; \
   pacman -Scc --noconfirm
 
