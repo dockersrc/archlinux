@@ -13,7 +13,7 @@ FROM base-${TARGETARCH} AS base
 
 # Update system and install essential packages
 RUN pacman -Syyu --noconfirm; \
-  pacman -S --noconfirm git curl wget bash glibc-locales; \
+  pacman -Syyu --noconfirm git curl wget bash glibc-locales; \
   pacman -Scc --noconfirm
 
 RUN echo "en_US.UTF-8 UTF-8" >/etc/locale.gen && locale-gen
@@ -30,3 +30,4 @@ LABEL version="1.0"
 LABEL maintainer="CasjaysDev"
 LABEL architecture="amd64,arm64"
 LABEL description="Multi-architecture Arch Linux container"
+
