@@ -1,4 +1,4 @@
-name: archlinux
+name: archlinux-base
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
       - master
   schedule:
-    - cron: '0 2 * * 1'
+    - cron: '0 2 2 * *'
 
 jobs:
   build-and-push:
@@ -42,34 +42,12 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile.base
           platforms: |
             linux/amd64
             linux/arm64
           push: true
           provenance: false
-          build-args: |
-            IMAGE_NAME=archlinux
-            IMAGE_VERSION=latest
-            IMAGE_REPO=casjaysdev/archlinux
-            PHP_SERVER=archlinux
-            BUILD_DATE=${{ steps.meta.outputs.BUILD_DATE }}
-            BUILD_VERSION=${{ steps.meta.outputs.BUILD_DATE }}
-            PULL_URL=ghcr.io/dockersrc/archlinux
-            DISTRO_VERSION=base
-            CONTAINER_VERSION=USE_DATE
-            TIMEZONE=America/New_York
-            LANGUAGE=en_US.UTF-8
-            PHP_VERSION=system
-            NODE_VERSION=system
-            NODE_MANAGER=system
-            SERVICE_PORT=
-            EXPOSE_PORTS=
-            WWW_ROOT_DIR=/usr/local/share/httpd/default
-            DEFAULT_FILE_DIR=/usr/local/share/template-files
-            DEFAULT_DATA_DIR=/usr/local/share/template-files/data
-            DEFAULT_CONF_DIR=/usr/local/share/template-files/config
-            DEFAULT_TEMPLATE_DIR=/usr/local/share/template-files/defaults
           annotations: |
             org.opencontainers.image.title=casjaysdev/archlinux
             org.opencontainers.image.description=Containerized version of casjaysdev/archlinux

@@ -21,7 +21,7 @@ dockermgr update os archlinux
 ```shell
 mkdir -p "/var/lib/srv/root/docker/casjaysdev/archlinux/latest"
 git clone "https://github.com/dockermgr/archlinux" "$HOME/.local/share/CasjaysDev/dockermgr/archlinux"
-cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/archlinux/rootfs/." "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/"
+cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/archlinux/dockerfs/." "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/"
 docker run -d \
 --restart always \
 --privileged \

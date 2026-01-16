@@ -74,7 +74,7 @@ ENV HOSTNAME="casjaysdev-archlinux"
 USER ${USER}
 WORKDIR /root
 
-COPY ./rootfs/usr/local/bin/. /usr/local/bin/
+COPY ./dockerfs/usr/local/bin/. /usr/local/bin/
 
 RUN set -e; \
   echo "Updating the system and ensuring bash is installed"; \
@@ -125,7 +125,7 @@ RUN echo "Initializing packages before copying files to image"; \
   if [ -f "/root/docker/setup/02-packages.sh" ];then echo "Running the packages script";/root/docker/setup/02-packages.sh||{ echo "Failed to execute /root/docker/setup/02-packages.sh" >&2 && exit 10; };echo "Done running the packages script";fi; \
   echo ""
 
-COPY ./rootfs/. /
+COPY ./dockerfs/. /
 COPY ./Dockerfile /root/docker/Dockerfile
 
 RUN echo "Updating system files "; \
