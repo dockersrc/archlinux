@@ -1,5 +1,5 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # get ip addresses
-CONTAINER_IP4_ADDRESS="${CONTAINER_IP4_ADDRESS:-$(__get_ip4)}"
-CONTAINER_IP6_ADDRESS="${CONTAINER_IP6_ADDRESS:-$(__get_ip6)}"
+CONTAINER_IP4_ADDRESS="${CONTAINER_IP4_ADDRESS:-127.0.0.1}"
+CONTAINER_IP6_ADDRESS="${CONTAINER_IP6_ADDRESS:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -

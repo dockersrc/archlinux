@@ -60,7 +60,7 @@ ARG SHELL_OPTS
 ARG AUR_USER
 ARG AUR_HOME
 
-ARG PACK_LIST="bash-completion git curl wget sudo unzip base-devel mailx postfix python python-pip certbot ca-certificates jq "
+ARG PACK_LIST="systemd bash-completion git curl wget sudo unzip base-devel mailx postfix python python-pip certbot ca-certificates jq "
 
 ENV ENV=~/.profile
 ENV SHELL="/bin/sh"
@@ -196,15 +196,7 @@ RUN echo "Deleting unneeded files"; \
   $SHELL_OPTS; \
   pkmgr clean; \
   rm -Rf "/config" "/data" || true; \
-  rm -rf /etc/systemd/system/*.wants/* || true; \
-  rm -rf /lib/systemd/system/systemd-update-utmp* || true; \
-  rm -rf /lib/systemd/system/anaconda.target.wants/* || true; \
-  rm -rf /lib/systemd/system/local-fs.target.wants/* || true; \
-  rm -rf /lib/systemd/system/multi-user.target.wants/* || true; \
-  rm -rf /lib/systemd/system/sockets.target.wants/*udev* || true; \
-  rm -rf /lib/systemd/system/sockets.target.wants/*initctl* || true; \
   rm -Rf /usr/share/doc/* /var/tmp/* /var/cache/*/* /root/.cache/* /usr/share/info/* /tmp/* || true; \
-  if [ -d "/lib/systemd/system/sysinit.target.wants" ];then cd "/lib/systemd/system/sysinit.target.wants" && rm -f $(ls | grep -v systemd-tmpfiles-setup);fi; \
   if [ -f "/root/docker/setup/07-cleanup.sh" ];then echo "Running the cleanup script";/root/docker/setup/07-cleanup.sh||{ echo "Failed to execute /root/docker/setup/07-cleanup.sh" >&2 && exit 10; };echo "Done running the cleanup script";fi; \
   echo ""
 
@@ -282,5 +274,5 @@ EXPOSE ${SERVICE_PORT} ${ENV_PORTS}
 
 STOPSIGNAL SIGRTMIN+3
 
-ENTRYPOINT [ "tini", "-p", "SIGTERM","--", "/usr/local/bin/entrypoint.sh" ]
-HEALTHCHECK --start-period=10m --interval=5m --timeout=15s CMD [ "/usr/local/bin/entrypoint.sh", "healthcheck" ]
+ENTRYPOINT [ "/usr/sbin/init" ]
+HEALTHCHECK --start-period=10m --interval=5m --timeout=15s CMD [ "/usr/local/bin/healthcheck", "--process", "systemd" ]

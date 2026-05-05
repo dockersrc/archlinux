@@ -38,15 +38,18 @@ __copy() {
     __printf_color "Copying $1/* to $2/"
     __unlink "$2"
     mkdir -p "$2"
-    cp -Rf "$1"/. "$2"/
-    exitCode=$?
-  elif [ -f "$1" ]; then
+    for f in "$1"/* "$1"/.[!.]* "$1"/..?*; do
+      [ -e "$f" ] || [ -L "$f" ] || continue
+      base=$(basename -- "$f")
+      __copy "$f" "$2/$base" || exitCode=$?
+    done
+  elif [ -f "$1" ] || [ -L "$1" ]; then
     __printf_color "Copying $1 to $2"
     __unlink "$2"
     cp -Rf "$1" "$2"
     exitCode=$?
- fi
- return $exitCode
+  fi
+  return $exitCode
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define variables

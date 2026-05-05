@@ -3,9 +3,6 @@
 # Set bash options
 [ "$DEBUGGER" = "on" ] && echo "Enabling debugging" && set -o pipefail -x$DEBUGGER_OPTIONS || set -o pipefail
 # - - - - - - - - - - - - - - - - - - - - - - - - -
-# import the functions file
-[ -f "/usr/local/etc/docker/functions/entrypoint.sh" ] && . "/usr/local/etc/docker/functions/entrypoint.sh"
-# - - - - - - - - - - - - - - - - - - - - - - - - -
 # GLOBAL enviroment variables
 #USER="${USER:-root}"
 #LANG="${LANG:-C.UTF-8}"
@@ -23,13 +20,20 @@
 #DBTYPE="sqlite"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # healthcheck
-#HEALTH_ENABLED="${HEALTH_ENABLED:-$ENV_HEALTH_ENABLED}"
-#HEALTH_URL="${HEALTH_URL:-}"
+#HEALTHCHECK_URL="${HEALTHCHECK_URL:-}"
+#HEALTHCHECK_HTTP_STATUS="${HEALTHCHECK_HTTP_STATUS:-2,3}"
+#HEALTHCHECK_HOST="${HEALTHCHECK_HOST:-127.0.0.1}"
+#HEALTHCHECK_PORT="${HEALTHCHECK_PORT:-}"
+#HEALTHCHECK_PROCESS="${HEALTHCHECK_PROCESS:-systemd}"
+#HEALTHCHECK_FILE="${HEALTHCHECK_FILE:-}"
+#HEALTHCHECK_FILE_MAX_AGE="${HEALTHCHECK_FILE_MAX_AGE:-}"
+#HEALTHCHECK_TIMEOUT="${HEALTHCHECK_TIMEOUT:-5}"
+#HEALTHCHECK_VERBOSE="${HEALTHCHECK_VERBOSE:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # php settings
 #PHP_VERSION="${PHP_VERSION//php/}"
-#PHP_INI_DIR="${PHP_INI_DIR:-$(__find_php_ini)}"
-#PHP_BIN_DIR="${PHP_BIN_DIR:-$(__find_php_bin)}"
+#PHP_INI_DIR="${PHP_INI_DIR:-}"
+#PHP_BIN_DIR="${PHP_BIN_DIR:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # services/ports
 #ENV_PORTS="${ENV_PORTS:-}"
@@ -46,8 +50,8 @@ SERVER_ADMIN="${SERVER_ADMIN:-root@${EMAIL_DOMAIN:-${DOMAINNAME:-$FULL_DOMAIN_NA
 EMAIL_RELAY="${EMAIL_RELAY:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # get ip addresses
-CONTAINER_IP4_ADDRESS="${CONTAINER_IP4_ADDRESS:-$(__get_ip4)}"
-CONTAINER_IP6_ADDRESS="${CONTAINER_IP6_ADDRESS:-$(__get_ip6)}"
+CONTAINER_IP4_ADDRESS="${CONTAINER_IP4_ADDRESS:-127.0.0.1}"
+CONTAINER_IP6_ADDRESS="${CONTAINER_IP6_ADDRESS:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # cerbot
 #CERT_BOT_MAIL="${CERT_BOT_MAIL:-}"
@@ -71,9 +75,9 @@ CONTAINER_IP6_ADDRESS="${CONTAINER_IP6_ADDRESS:-$(__get_ip6)}"
 #CN="${CN:-$FULL_DOMAIN_NAME}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # web server configs
-HTTPD_CONFIG_FILE="${HTTPD_CONFIG_FILE:-$(__find_httpd_conf)}"
-NGINX_CONFIG_FILE="${NGINX_CONFIG_FILE:-$(__find_nginx_conf)}"
-LIGHTTPD_CONFIG_FILE="${LIGHTTPD_CONFIG_FILE:-$(__find_lighttpd_conf)}"
+HTTPD_CONFIG_FILE="${HTTPD_CONFIG_FILE:-}"
+NGINX_CONFIG_FILE="${NGINX_CONFIG_FILE:-}"
+LIGHTTPD_CONFIG_FILE="${LIGHTTPD_CONFIG_FILE:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # redis env
 DATABASE_DIR_REDIS="${DATABASE_DIR_REDIS:-$DATABASE_BASE_DIR/redis}"
@@ -83,7 +87,7 @@ DATABASE_DIR_PGSQL="${DATABASE_DIR_PGSQL:-$PGDATA}"
 PGDATA="${DATABASE_DIR_PGSQL:-$DATABASE_BASE_DIR/postgres}"
 POSTGRES_USER="${DATABASE_USER_ROOT:-$POSTGRES_USER}"
 POSTGRES_PASSWORD="${DATABASE_PASS_ROOT:-$POSTGRES_PASSWORD}"
-POSTGRES_CONFIG_FILE="${POSTGRES_CONFIG_FILE:-$(__find_pgsql_conf)}"
+POSTGRES_CONFIG_FILE="${POSTGRES_CONFIG_FILE:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # mariadb env
 MARIADB_ROOT_HOST="${MARIADB_ROOT_HOST:-%}"
@@ -96,7 +100,7 @@ MARIADB_ROOT_PASSWORD="${DATABASE_PASS_ROOT:-$MARIADB_ROOT_PASSWORD}"
 MARIADB_ALLOW_EMPTY_ROOT_PASSWORD="${MARIADB_ALLOW_EMPTY_ROOT_PASSWORD:-}"
 MARIADB_INITDB_SKIP_TZINFO="${MARIADB_INITDB_SKIP_TZINFO}:-"
 MARIADB_RANDOM_ROOT_PASSWORD="${MARIADB_RANDOM_ROOT_PASSWORD:-}"
-MARIADB_CONFIG_FILE="${MARIADB_CONFIG_FILE:-$(__find_mysql_conf)}"
+MARIADB_CONFIG_FILE="${MARIADB_CONFIG_FILE:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # mongodb env
 INITDB_ROOT_USERNAME="${DATABASE_USER_ROOT:-$INITDB_ROOT_USERNAME}"
@@ -114,22 +118,3 @@ DATABASE_DIR_SUPABASE="${DATABASE_DIR_SUPABASE:-$DATABASE_BASE_DIR/supabase}"
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # docker env
 DOCKER_HOST="unix://var/run/docker.sock"
-# - - - - - - - - - - - - - - - - - - - - - - - - -
-# File locations
-ENTRYPOINT_PID_FILE="${ENTRYPOINT_PID_FILE:-/run/init.d/entrypoint.pid}"
-ENTRYPOINT_INIT_FILE="${ENTRYPOINT_INIT_FILE:-/config/.entrypoint.done}"
-ENTRYPOINT_DATA_INIT_FILE="${ENTRYPOINT_DATA_INIT_FILE:-/data/.docker_has_run}"
-ENTRYPOINT_CONFIG_INIT_FILE="${ENTRYPOINT_CONFIG_INIT_FILE:-/config/.docker_has_run}"
-# - - - - - - - - - - - - - - - - - - - - - - - - -
-# Startup variables
-INIT_DATE="${INIT_DATE:-$(date)}"
-START_SERVICES="${START_SERVICES:-yes}"
-ENTRYPOINT_MESSAGE="${ENTRYPOINT_MESSAGE:-yes}"
-ENTRYPOINT_FIRST_RUN="${ENTRYPOINT_FIRST_RUN:-yes}"
-DATA_DIR_INITIALIZED="${DATA_DIR_INITIALIZED:-false}"
-CONFIG_DIR_INITIALIZED="${CONFIG_DIR_INITIALIZED:-false}"
-# - - - - - - - - - - - - - - - - - - - - - - - - -
-if [ -f "$ENTRYPOINT_PID_FILE" ] || [ -f "$ENTRYPOINT_INIT_FILE" ]; then
-  START_SERVICES="no" ENTRYPOINT_MESSAGE="no" ENTRYPOINT_FIRST_RUN="no"
-fi
-# - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -33,10 +33,23 @@ __unlink() { [ -L "$1" ] && rm -f -- "$1" >/dev/null; }
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom functions
 __ln_sf() {
+  exitCode=0
+  if [ -d "$1" ] && [ ! -L "$1" ]; then
+    __printf_color "symlinking contents of $1 into $2/" "4"
+    __unlink "$2"
+    mkdir -p "$2"
+    for f in "$1"/* "$1"/.[!.]* "$1"/..?*; do
+      [ -e "$f" ] || [ -L "$f" ] || continue
+      base=$(basename -- "$f")
+      __ln_sf "$f" "$2/$base" || exitCode=$?
+    done
+  else
     __printf_color "symlinking $2 to $1" "4"
     __unlink "$2"
     ln -sf "$1" "$2"
-    return $?
+    exitCode=$?
+  fi
+  return $exitCode
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define variables
