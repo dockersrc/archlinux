@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202511291153-git
+##@Version           :  202605242139-git
 # @@Author           :  CasjaysDev
 # @@Contact          :  CasjaysDev <docker-admin@casjaysdev.pro>
 # @@License          :  MIT
-# @@Copyright        :  Copyright 2025 CasjaysDev
-# @@Created          :  Sat Nov 29 11:53:06 AM EST 2025
+# @@Copyright        :  Copyright 2026 CasjaysDev
+# @@Created          :  Sun May 24 08:58:48 PM EDT 2026
 # @@File             :  02-packages.sh
 # @@Description      :  script to run packages
 # @@Changelog        :  newScript
@@ -31,12 +31,20 @@ exitCode=0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
+if command -v update-ca-certificates >/dev/null 2>&1; then
+  update-ca-certificates
+elif command -v update-ca-trust >/dev/null 2>&1; then
+  update-ca-trust extract
+elif command -v trust >/dev/null 2>&1; then
+  trust extract-compat
+fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the exit code
-#exitCode=$?
+exitCode=$?
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 exit $exitCode
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # ex: ts=2 sw=2 et filetype=sh
 # - - - - - - - - - - - - - - - - - - - - - - - - -
+

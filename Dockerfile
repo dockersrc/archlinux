@@ -60,7 +60,7 @@ ARG SHELL_OPTS
 ARG AUR_USER
 ARG AUR_HOME
 
-ARG PACK_LIST="systemd bash-completion git curl wget sudo unzip base-devel mailx postfix python python-pip certbot ca-certificates jq "
+ARG PACK_LIST="systemd bash-completion git curl wget sudo unzip base-devel mailx postfix python python-pip ca-certificates jq "
 
 ENV ENV=~/.profile
 ENV SHELL="/bin/sh"

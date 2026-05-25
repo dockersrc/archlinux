@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202511291153-git
+##@Version           :  202605242058-git
 # @@Author           :  CasjaysDev
 # @@Contact          :  CasjaysDev <docker-admin@casjaysdev.pro>
 # @@License          :  MIT
-# @@Copyright        :  Copyright 2025 CasjaysDev
-# @@Created          :  Sat Nov 29 11:53:06 AM EST 2025
+# @@Copyright        :  Copyright 2026 CasjaysDev
+# @@Created          :  Sun May 24 08:58:48 PM EDT 2026
 # @@File             :  03-files.sh
 # @@Description      :  script to run files
 # @@Changelog        :  newScript
@@ -31,51 +31,55 @@ exitCode=0
 if [ -d "/tmp/bin" ]; then
   mkdir -p "/usr/local/bin"
   for bin in "/tmp/bin"/*; do
-    name="$(basename -- "$bin")"
+    [ -e "$bin" ] || continue
+    name="${bin##*/}"
     echo "Installing $name to /usr/local/bin/$name"
-    copy "$bin" "/usr/local/bin/$name"
+    cp -Rf "$bin" "/usr/local/bin/$name"
     chmod -f +x "/usr/local/bin/$name"
   done
 fi
 unset bin
 if [ -d "/tmp/var" ]; then
   for var in "/tmp/var"/*; do
-    name="$(basename -- "$var")"
+    [ -e "$var" ] || continue
+    name="${var##*/}"
     echo "Installing $var to /var/$name"
     if [ -d "$var" ]; then
       mkdir -p "/var/$name"
-      copy "$var/." "/var/$name/"
+      cp -Rf "$var/." "/var/$name/"
     else
-      copy "$var" "/var/$name"
+      cp -Rf "$var" "/var/$name"
     fi
   done
 fi
 unset var
 if [ -d "/tmp/etc" ]; then
   for config in "/tmp/etc"/*; do
-    name="$(basename -- "$config")"
+    [ -e "$config" ] || continue
+    name="${config##*/}"
     echo "Installing $config to /etc/$name"
     if [ -d "$config" ]; then
       mkdir -p "/etc/$name"
-      copy "$config/." "/etc/$name/"
+      cp -Rf "$config/." "/etc/$name/"
       mkdir -p "/usr/local/share/template-files/config/$name"
-      copy "$config/." "/usr/local/share/template-files/config/$name/"
+      cp -Rf "$config/." "/usr/local/share/template-files/config/$name/"
     else
-      copy "$config" "/etc/$name"
-      copy "$config" "/usr/local/share/template-files/config/$name"
+      cp -Rf "$config" "/etc/$name"
+      cp -Rf "$config" "/usr/local/share/template-files/config/$name"
     fi
   done
 fi
 unset config
 if [ -d "/tmp/data" ]; then
   for data in "/tmp/data"/*; do
-    name="$(basename -- "$data")"
+    [ -e "$data" ] || continue
+    name="${data##*/}"
     echo "Installing $data to /usr/local/share/template-files/data"
     if [ -d "$data" ]; then
       mkdir -p "/usr/local/share/template-files/data/$name"
-      copy "$data/." "/usr/local/share/template-files/data/$name/"
+      cp -Rf "$data/." "/usr/local/share/template-files/data/$name/"
     else
-      copy "$data" "/usr/local/share/template-files/data/$name"
+      cp -Rf "$data" "/usr/local/share/template-files/data/$name"
     fi
   done
 fi
@@ -85,9 +89,10 @@ unset data
 
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the exit code
-#exitCode=$?
+exitCode=$?
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 exit $exitCode
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 # ex: ts=2 sw=2 et filetype=sh
 # - - - - - - - - - - - - - - - - - - - - - - - - -
+
