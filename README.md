@@ -19,17 +19,17 @@ dockermgr update os archlinux
 ## Install and run container
   
 ```shell
-mkdir -p "/var/lib/srv/root/docker/casjaysdev/archlinux/latest"
+mkdir -p "/srv/root/docker/casjaysdev/archlinux/latest"
 git clone "https://github.com/dockermgr/archlinux" "$HOME/.local/share/CasjaysDev/dockermgr/archlinux"
-cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/archlinux/rootfs/." "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/"
+cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/archlinux/rootfs/." "/srv/root/docker/casjaysdev/archlinux/latest/"
 docker run -d \
 --restart always \
 --privileged \
 --name casjaysdev-archlinux-latest \
 --hostname archlinux \
 -e TZ=${TIMEZONE:-America/New_York} \
--v "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/data:/data:z" \
--v "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/config:/config:z" \
+-v "/srv/root/docker/casjaysdev/archlinux/latest/data:/data:z" \
+-v "/srv/root/docker/casjaysdev/archlinux/latest/config:/config:z" \
 casjaysdev/archlinux:latest
 ```
   
@@ -45,8 +45,8 @@ services:
       - TZ=America/New_York
       - HOSTNAME=archlinux
     volumes:
-      - "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/data:/data:z"
-      - "/var/lib/srv/root/docker/casjaysdev/archlinux/latest/config:/config:z"
+      - "/srv/root/docker/casjaysdev/archlinux/latest/data:/data:z"
+      - "/srv/root/docker/casjaysdev/archlinux/latest/config:/config:z"
     restart: always
 ```
   
